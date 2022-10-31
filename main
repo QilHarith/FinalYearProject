@@ -1,0 +1,32 @@
+from  socket import*
+import requests
+
+def main():
+    apiToken = '5625679097:AAFJL-5AI85bsEGUf-h6VKz09xSBFkrMc4M'
+    chatID = '518438573'
+    apiURL = f'https://api.telegram.org/bot5625679097:AAFJL-5AI85bsEGUf-h6VKz09xSBFkrMc4M/sendMessage'
+    message = 'Alert! Security Breach Detected!!'
+    ip_add="192.168.146.146"
+    port = 22
+    print("[+] Honeypot Running.....")
+    try:
+        get_socket_con = socket(AF_INET,SOCK_STREAM)
+        get_socket_con.bind((ip_add,port))
+        get_socket_con.listen(10)
+        while 1:
+            client_con,client_addr = get_socket_con.accept()
+            print(requests.post(apiURL, json={'chat_id': chatID, 'text': message}))
+            print("Alert Security Breach!!! ,Someone is trying to access port 22 ! - [{}]".format(client_addr[0]))
+            client_con.send(b"<h1> Port 22 for 192.168.146.146 are open! </h1>")
+            data = client_con.recv(2048)
+            print(data.decode('utf-8'))
+    except error as identifier:
+        print("[+] Unspesified error[{}]".format(identifier))
+    except KeyboardInterrupt as ky:
+            print("[-] Process stoped !")
+    finally:
+        get_socket_con.close()
+    get_socket_con.close()
+if __name__ == "__main__":
+
+    main()
